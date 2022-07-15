@@ -6,9 +6,9 @@ tags:
 categories:
 keywords:
 description:
-top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/v2-6890485c84748900d9dae824b7f7cbb1_b.jpg
+top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/hexo.png
 comments:
-cover: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/v2-6890485c84748900d9dae824b7f7cbb1_b.jpg
+cover: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/hexo.png
 toc:
 toc_number:
 toc_style_simple:
@@ -27,7 +27,7 @@ aside:
 
 ## 前言
 
-<img src="https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/v2-6890485c84748900d9dae824b7f7cbb1_b.jpg" alt="img" style="zoom:50%;" />
+<img src="https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/hexo.png" style="zoom:50%;" />
 
 **hexo**也算是老牌博客框架了，以前对于hexo的了解也仅仅停留在知道他是一个能够快速将本地的markdown文件生成静态网站的框架。
 最早的个人博客网站还是自己动手，从0-1的一个spa，并做了大量seo，设备适配，性能优化，配套开发的服务也包括后台管理系统，node服务以及sql数据库，当然个人还兼备产品设计，UI设计等工作。
