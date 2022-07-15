@@ -1,5 +1,5 @@
 ---
-title: 基础遍历—JavaScript
+title: 记一次hexo搭建
 date: 2022-07-15 16:57:01
 updated: 2022-07-15 16:57:01
 tags:
