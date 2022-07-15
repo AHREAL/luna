@@ -5,9 +5,9 @@
   "scripts": {
     "build": "hexo generate",
     "clean": "hexo clean",
-    "deploy": "hexo deploy",
+    "deploy": "sh ./script/deploy.sh",
     "server": "hexo server",
-    "start": "npm run build && pm2 start ./www/index.js",
+    "start": "pm2 start ./www/index.js",
     "stop": "pm2 stop all"
   },
   "hexo": {
