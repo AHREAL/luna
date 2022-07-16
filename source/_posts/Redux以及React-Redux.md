@@ -2,8 +2,8 @@
 title: Redux以及React-Redux
 date: 2019-10-01 20:58:01
 updated: 2019-10-01 22:00:02
-tags:
-categories:
+tags: React
+categories: 框架技术
 keywords:
 description:
 top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/redux.webp

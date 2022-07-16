@@ -2,8 +2,8 @@
 title: NodeJs事件循环
 date: 2020-05-21 12:52:46
 updated: 2020-05-22 11:32:16
-tags:
-categories:
+tags: NodeJs
+categories: JavaScript
 keywords:
 description:
 top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/node.webp 

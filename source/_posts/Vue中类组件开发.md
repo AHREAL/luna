@@ -2,9 +2,9 @@
 title: Vue中类组件开发
 date: 2020-05-12 15:22:42
 updated: 2020-05-14 19:21:23 
-tags:
-categories:
-keywords:
+tags: Vue
+categories: 框架技术
+keywords: 
 description:
 top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/vue.png
 comments:

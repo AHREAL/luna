@@ -2,8 +2,8 @@
 title: TypeScript配置详解
 date: 2020-05-09 21:01:42
 updated: 2020-05-23 19:44:04 
-tags:
-categories:
+tags: TypeScript
+categories: 前端工程化
 keywords:
 description:
 top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/ts.jpeg

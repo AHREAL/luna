@@ -2,8 +2,8 @@
 title: TypeScript笔记
 date: 2020-05-08 13:01:09
 updated: 2020-05-14 12:04:34 
-tags:
-categories:
+tags: TypeScript
+categories: 前端工程化
 keywords:
 description:
 top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/ts.jpeg

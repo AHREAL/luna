@@ -2,8 +2,8 @@
 title: 记一次hexo搭建
 date: 2022-07-15 16:57:01
 updated: 2022-07-15 16:57:01
-tags:
-categories:
+tags: 杂记
+categories: 杂记
 keywords:
 description:
 top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/hexo.png

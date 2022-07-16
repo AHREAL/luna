@@ -2,8 +2,8 @@
 title: 简易React脚手架工具
 date: 2019-09-21 18:01:01
 updated: 2019-09-21 19:42:11
-tags:
-categories:
+tags: React
+categories: 前端工程化
 keywords:
 description:
 top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/react-3.png

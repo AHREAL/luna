@@ -2,10 +2,10 @@
 title: 从0到1发布一个NPM包
 date: 2020-05-12 20:58:01
 updated: 2020-05-12 21:00:01
-tags:
-categories:
+tags: 杂记
+categories: 杂记
 keywords:
-description:
+description: 记一次实验性操作流程
 top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/npm.jpeg
 comments:
 cover: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/npm.jpeg

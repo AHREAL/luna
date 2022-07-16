@@ -2,8 +2,8 @@
 title: 基础遍历—HTTP相关
 date: 2021-03-05 14:01:01
 updated: 2020-03-06 20:11:11
-tags:
-categories:
+tags: 基础遍历
+categories: 基础遍历
 keywords:
 description:
 top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/http.png
@@ -25,8 +25,6 @@ aside:
 ---
 
 基础遍历—HTTP相关
-
-# HTTP相关
 
 ## Status Code
 

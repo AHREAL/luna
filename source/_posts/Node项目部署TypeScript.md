@@ -2,8 +2,8 @@
 title: Node项目部署TypeScript
 date: 2020-05-29 13:23:06
 updated: 2020-05-29 14:00:16
-tags:
-categories:
+tags: TypeScript
+categories: 前端工程化
 keywords:
 description:
 top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/nodets.png 

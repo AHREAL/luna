@@ -2,10 +2,10 @@
 title: 基础遍历—HTML/CSS
 date: 2021-03-01 18:01:01
 updated: 2020-03-02 21:11:11
-tags:
+tags: HTML,CSS
 categories:
 keywords:
-description:
+description: 一些常见的HTML/CSS基础
 top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/htmlcss.jpeg
 comments:
 cover: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/htmlcss.jpeg
@@ -25,8 +25,6 @@ aside:
 ---
 
 一些常见的HTML/CSS基础
-
-## HTML
 
 ### 如何理解语意化
 

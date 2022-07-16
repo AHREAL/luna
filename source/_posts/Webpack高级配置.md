@@ -2,10 +2,10 @@
 title: Webpack高级配置
 date: 2020-04-15 16:02:32
 updated: 2020-04-18 20:29:48
-tags:
-categories:
+tags: Webpack
+categories: 前端工程化
 keywords:
-description:
+description: 多入口，跨域，环境变量相关
 top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/webpack.jpeg
 comments:
 cover: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/webpack.jpeg

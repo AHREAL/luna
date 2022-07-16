@@ -2,8 +2,8 @@
 title: JavaScript中模块规范
 date: 2020-05-21 14:12:36
 updated: 2020-05-22 19:09:08
-tags:
-categories:
+tags: JavaScript
+categories: JavaScript
 keywords:
 description:
 top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/jsmodule.jpeg

@@ -2,8 +2,8 @@
 title: Webpack基础配置
 date: 2020-04-15 16:02:32
 updated: 2020-04-16 18:29:48
-tags:
-categories:
+tags: Webpack
+categories: 前端工程化
 keywords:
 description:
 top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/webpack.jpeg
