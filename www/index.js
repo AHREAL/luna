@@ -1,15 +1,21 @@
 const dotenv = require("dotenv")
 dotenv.config()
 
+const https = require('https');
+const fs = require('fs');
 const { Buffer } = require('buffer');
 const childrenProcess = require('child_process')
 const bodyParser = require('body-parser')
 const crypto = require('crypto');
 const express = require('express')
 const app = express()
-const port = 80
+const port = 443
 const HUB_SECRET = process.env.HUB_SECRET;
-
+const httpsOptions = {
+  key:fs.readFileSync('./cert/js-coder.cn.key'),
+  cert:fs.readFileSync('./cert/js-coder.cn.crt')
+}
+var httpsServer = https.createServer(httpsOptions,app);
 app.use(bodyParser.json())
 
 /** 执行命令 */
@@ -68,7 +74,7 @@ app.post('/refresh', (req, res) => {
   });
 })
 
-app.listen(port, () => {
+httpsServer.listen(port, () => {
   console.log(`app listening on port ${port}`)
 })
 
