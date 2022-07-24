@@ -2,21 +2,39 @@ const dotenv = require("dotenv")
 dotenv.config()
 
 const https = require('https');
+const http = require('http');
 const fs = require('fs');
 const { Buffer } = require('buffer');
 const childrenProcess = require('child_process')
 const bodyParser = require('body-parser')
 const crypto = require('crypto');
 const express = require('express')
+
 const app = express()
-const port = 443
+const httpApp = express()
+const httpPort = 80
+const httpsPort = 443
 const HUB_SECRET = process.env.HUB_SECRET;
 const httpsOptions = {
   key:fs.readFileSync('./cert/js-coder.cn.key'),
   cert:fs.readFileSync('./cert/js-coder.cn.crt')
 }
-var httpsServer = https.createServer(httpsOptions,app);
+const httpsServer = https.createServer(httpsOptions,app);
+const httpServer = http.createServer(httpApp);
+
+/** http重定向https */
+httpApp.all('*', function (req, res, next) {
+  if(req.protocol !== 'https') {
+    return res.redirect(301, 'https://' + req.get('host') + req.originalUrl);
+  }
+  return next();
+})
+
+/** 解析body */
 app.use(bodyParser.json())
+
+/** 静态资源 */
+app.use(express.static('./public'))
 
 /** 执行命令 */
 const exec = (bash) => {
@@ -50,9 +68,6 @@ const validateHubSig = (req) => {
   }
 }
 
-/** 静态资源 */
-app.use(express.static('./public'))
-
 /** webhook - 自动刷新 */
 app.post('/refresh', (req, res) => {
   if (validateHubSig(req)) {
@@ -74,7 +89,10 @@ app.post('/refresh', (req, res) => {
   });
 })
 
-httpsServer.listen(port, () => {
-  console.log(`app listening on port ${port}`)
+httpsServer.listen(httpsPort, () => {
+  console.log(`app listening on port ${httpsPort}`)
 })
 
+httpServer.listen(httpPort, ()=>{
+  console.log(`app listening on port ${httpPort}`)
+})
