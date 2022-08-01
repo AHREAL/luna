@@ -76,11 +76,11 @@ katex:
 # --------------------------------------
 
 # Favicon（網站圖標）
-favicon: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/favicon.ico
+favicon: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/bitbug_favicon.ico
 
 # Avatar (頭像)
 avatar:
-  img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/avatar.jpeg
+  img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/20220801233220.png
   effect: false
 
 # Disable all banner image
@@ -132,7 +132,7 @@ error_img:
 # A simple 404 page
 error_404:
   enable: false
-  subtitle: 'Page Not Found'
+  subtitle: "Page Not Found"
   background: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/404.png
 
 post_meta:
@@ -414,7 +414,6 @@ footer:
 # https://tongji.baidu.com/web/welcome/login
 baidu_analytics: 7756ec1754f8d27ab24f53c469d7c2af
 
-
 # Google Analytics
 # https://analytics.google.com/analytics/web/
 google_analytics:
@@ -530,7 +529,7 @@ canvas_fluttering_ribbon:
 # https://github.com/hustcc/canvas-nest.js
 canvas_nest:
   enable: true
-  color: '0,0,255' #color of lines, default: '0,0,0'; RGB values: (R,G,B).(note: use ',' to separate.)
+  color: "0,0,255" #color of lines, default: '0,0,0'; RGB values: (R,G,B).(note: use ',' to separate.)
   opacity: 0.7 # the opacity of line (0~1), default: 0.5.
   zIndex: -1 # z-index property of the background, default: -1.
   count: 99 # the number of lines, default: 99.
@@ -703,9 +702,9 @@ translate:
   # Time delay
   translateDelay: 0
   # The text of the button when the language is Simplified Chinese
-  msgToTraditionalChinese: '繁'
+  msgToTraditionalChinese: "繁"
   # The text of the button when the language is Traditional Chinese
-  msgToSimplifiedChinese: '簡'
+  msgToSimplifiedChinese: "簡"
 
 # Read Mode (閲讀模式)
 readmode: true
@@ -791,8 +790,8 @@ aplayerInject:
 snackbar:
   enable: false
   position: bottom-left
-  bg_light: '#49b1f5' # The background color of Toast Notification in light mode
-  bg_dark: '#1f1f1f' # The background color of Toast Notification in dark mode
+  bg_light: "#49b1f5" # The background color of Toast Notification in light mode
+  bg_dark: "#1f1f1f" # The background color of Toast Notification in dark mode
 
 # https://instant.page/
 # prefetch (預加載)
@@ -853,7 +852,7 @@ CDN:
   # when set it to local, you need to install hexo-butterfly-extjs
   third_party_provider: jsdelivr
 
-  # Add version number to CDN, true or false  
+  # Add version number to CDN, true or false
   version: false
 
   # Custom format
