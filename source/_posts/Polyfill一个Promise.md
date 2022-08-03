@@ -1,7 +1,7 @@
 ---
 title: Polyfill一个Promise
 date: 2022-07-31 00:41:30
-updated: 2022-08-01 00:41:30
+updated: 2022-08-03 23:57:30
 tags: JavaScript
 categories: JavaScript
 keywords:
@@ -600,8 +600,8 @@ if (this.status === FULFILLED) {
   try {
     callRes = successCall(this.successValue);
     handleResolve(callRes, resolve, reject);
-  } catch (error) {
-    reject(error)
+  } catch (err) {
+    reject(err)
   }
 }
 ```
@@ -654,15 +654,15 @@ class MyPromise {
         try {
           callRes = successCall(this.successValue);
           handleResolve(callRes, resolve, reject);
-        } catch (error) {
-          reject(error);
+        } catch (err) {
+          reject(err);
         }
       } else if (this.status === REJECTED) {
         try {
           callRes = errorCall(this.errorReson);
           handleResolve(callRes, resolve, reject);
         } catch (err) {
-          reject(error);
+          reject(err);
         }
       } else {
         this.successCall.push(() => {
@@ -670,15 +670,15 @@ class MyPromise {
             callRes = successCall(this.successValue);
             handleResolve(callRes, resolve, reject);
           } catch (err) {
-            reject(error);
+            reject(err);
           }
         });
         this.errorCall.push(() => {
           try {
-            callRes = errorCall(this.successValue);
+            callRes = errorCall(this.errorReson);
             handleResolve(callRes, resolve, reject);
           } catch (err) {
-            reject(error);
+            reject(err);
           }
         });
       }
@@ -696,4 +696,134 @@ function handleResolve(callRes, resolve, reject) {
 ```
 
 
+
+# 可选参数
+
+我们并没有处理then没有传递参数的情况，其实`successCall`和`errorCall`都应该是可选的参数，如果没有传递的话，应该将success或者error往下传递，直到有then的参数可以处理。
+
+**特性DEMO**
+
+```javascript
+// 假设这个promise已经fulfilled，那么需要把状态传递下去，直到被处理
+promise
+  .then()
+  .then()
+// 传递到这里被处理
+  .then((value)=>{
+  console.log(value)
+})
+
+// 假设这个promise已经rejected，那么需要把状态传递下去，直到被处理
+promise
+  // 这个then没有errorCall，那么会直接往下传递
+  .then((value)=>{
+  console.log(value)
+}).then((value)=>{
+  console.log(value)
+  // 传递到这里被处理
+}, (err)=>{
+  console.error(err)
+})
+```
+
+只需改写下then，即可达到该效果
+
+```javascript
+then(successCall, errorCall) {
+  successCall = successCall ? successCall : (value) => value;
+  errorCall = errorCall
+    ? errorCall
+  : (value) => {
+    throw value;
+  };
+}
+```
+
+
+
+# 静态方法Promise.all
+
+先列出Promise.all的特点：
+
+1. 接受一个数组，数组中可以存放任意值。
+2. 返回一个promise对象，当数组中的promise全部完成，则调用`successCall`，如果有一个失败，调用`errorCall`
+3. `successCall`和`errorCall`接收的参数数组元素顺序，和一开始All接收的元素顺序一致。
+
+```javascript
+static all(array) {
+  return new MyPromise((resolve, reject) => {
+    const res = [];
+    function deal(index, value) {
+      res[index] = value;
+      // 当res的长度和array的长度一致，表示全部元素已经处理完成
+      if (res.length === array.length) {
+        resolve(res);
+      }
+    }
+    for (let i = 0; i < array.length; i++) {
+      const tem = array[i];
+      if (tem instanceof MyPromise) {
+        tem.then(
+          (value) => deal(i, value),
+          (err) => reject(err)
+        );
+      } else {
+        deal(i, tem);
+      }
+    }
+  });
+}
+```
+
+
+
+# 静态方法Promise.resolve
+
+Promise.resolve接收一个参数，快速创建一个fulfilled的promise对象并返回。
+
+```javascript
+static resolve(value) {
+  // 如果接收到的value已经是一个promise对象了，那么无需创建直接返回
+  if(value instanceof MyPromise) return value
+  // 创建promise对象，并立即调用resolve
+  return new MyPromise((resolve)=>resolve(value))
+}
+```
+
+
+
+# finally
+
+finally特点：
+
+1. 不管promise是成功，还是失败，都会执行接受到的callback
+2. 透传上一个then方法的返回值
+3. callback返回promise对象，那么直接返回这个promise对象，否则返回一个新的promise对象
+
+```javascript
+finally(callback) {
+  return this.then(
+    (value) => {
+      return MyPromise.resolve(callback()).then(() => value);
+    },
+    (err) => {
+      return MyPromise.resolve(callback()).then(() => {
+        throw err;
+      });
+    }
+  );
+}
+```
+
+
+
+# catch
+
+catch只接受一个函数参数，这个函数只处理promise失败的情况，相当于catch接受的函数注册为`errorCall`。
+
+```javascript
+catch(errorCall){
+  return this.then(undefined, errorCall)
+}
+```
 
