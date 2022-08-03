@@ -1,14 +1,14 @@
 ---
-title: 异步编程与事件循环III
+title: Polyfill一个Promise
 date: 2022-07-31 00:41:30
-updated: 2022-07-31 00:41:30
+updated: 2022-08-01 00:41:30
 tags: JavaScript
 categories: JavaScript
 keywords:
 description:
-top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/202207202202136.png
+top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/20220801224902.png
 comments:
-cover: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/202207202202136.png
+cover: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/20220801224902.png
 toc:
 toc_number:
 toc_style_simple:
@@ -24,7 +24,7 @@ highlight_shrink:
 aside:
 ---
 
-拆解异步API的模拟实现
+根据一些手写Promise的分享，结合自己一些理解，模拟Promise的实现。
 
 # 实现Promise
 
@@ -427,7 +427,7 @@ class MyPromise {
 我们刚才处理的为在`successCall`或`errorCall`函数返回普通值的场景，如果返回了promise对象，那么需要特殊处理，即检查返回的`callRes`是否为`promise`对象，如果为`promise`对象，则要把新Promise对象的resolve和reject传递进`promise`对象的then回调 😈。
 
 ```javascript
-callRes = call(this.successValue)
+callRes = successCall(this.successValue)
 
 if (callRes instanceof MyPromise) {
   /** callRes是promise对象，得把resolve和reject注册到新的promise对象上 */
@@ -441,11 +441,11 @@ if (callRes instanceof MyPromise) {
 **整体then改造**
 
 ```javascript
-then(call, error) {
+then(successCall, errorCall) {
   return new MyPromise((resolve, reject) => {
     let callRes = undefined
     if (this.status === FULFILLED) {
-      callRes = call(this.successValue)
+      callRes = successCall(this.successValue)
 
       if (callRes instanceof MyPromise) {
         /** callRes是promise对象，得把resolve和reject注册到新的promise对象上 */
@@ -455,7 +455,7 @@ then(call, error) {
         resolve(callRes)
       }
     } else if (this.status === REJECTED) {
-      callRes = error(this.errorReson)
+      callRes = errorCall(this.errorReson)
 
       if (callRes instanceof MyPromise) {
         /** callRes是promise对象，得把resolve和reject注册到新的promise对象上 */
@@ -465,8 +465,8 @@ then(call, error) {
         resolve(callRes)
       }
     } else {
-      this.call.push(() => {
-        callRes = call(this.successValue)
+      this.successCall.push(() => {
+        callRes = successCall(this.successValue)
         if (callRes instanceof MyPromise) {
           /** callRes是promise对象，得把resolve和reject注册到新的promise对象上 */
           callRes.then(resolve, reject)
@@ -475,8 +475,8 @@ then(call, error) {
           resolve(callRes)
         }
       })
-      this.error.push(() => {
-        callRes = error(this.errorReson)
+      this.errorCall.push(() => {
+        callRes = errorCall(this.errorReson)
         if (callRes instanceof MyPromise) {
           /** callRes是promise对象，得把resolve和reject注册到新的promise对象上 */
           callRes.then(resolve, reject)
@@ -507,57 +507,193 @@ function handleResolve(callRes, resolve, reject){
 **最终完整代码**
 
 ```javascript
+const PENDING = 'pending'
+const FULFILLED = 'fulfilled'
+const REJECTED = 'rejected'
+
 class MyPromise {
     constructor(exec) {
         exec(this.resolve, this.reject)
     }
 
     status = PENDING
-    call = []
-    error = []
+    successCall = []
+    errorCall = []
 
     resolve = (value) => {
         if (this.status !== PENDING) return
         this.status = FULFILLED
         this.successValue = value
         // 需要执行数组中的所有函数
-        this.call.forEach(fn => {
+        this.successCall.forEach(fn => {
             fn()
         })
-        this.call = []
+        this.successCall = []
     }
 
     reject = (value) => {
         if (this.status !== PENDING) return
         this.status = REJECTED
         this.errorReson = value
-        this.error.forEach(fn => {
+        this.errorCall.forEach(fn => {
             fn()
         })
-        this.error = []
+        this.errorCall = []
     }
 
-    then(call, error) {
+    then(successCall, errorCall) {
         return new MyPromise((resolve, reject) => {
             let callRes = undefined
             if (this.status === FULFILLED) {
-                callRes = call(this.successValue)
+                callRes = successCall(this.successValue)
                 handleResolve(callRes, resolve, reject)
             } else if (this.status === REJECTED) {
-                callRes = error(this.errorReson)
+                callRes = errorCall(this.errorReson)
                 handleResolve(callRes, resolve, reject)
             } else {
-                this.call.push(() => {
-                    callRes = call(this.successValue)
+                this.successCall.push(() => {
+                    callRes = successCall(this.successValue)
                     handleResolve(callRes, resolve, reject)
                 })
-                this.error.push(() => {
-                    callRes = error(this.errorReson)
+                this.errorCall.push(() => {
+                    callRes = errorCall(this.errorReson)
                     handleResolve(callRes, resolve, reject)
                 })
             }
         })
     }
 }
+
+function handleResolve(callRes, resolve, reject){
+    if (callRes instanceof MyPromise) {
+        callRes.then(resolve, reject)
+    } else {
+        resolve(callRes)
+    }
+}
 ```
+
+
+
+# 错误处理
+
+一共有两处地方会执行用户的代码，`constructor`和`then`
+
+**处理constructor**
+
+```javascript
+constructor(exec) {
+  try{
+    exec(this.resolve, this.reject) 
+  }catch(err){
+    this.reject(err)
+  }
+}
+```
+
+**处理then**
+
+先写局部，如果出现异常，直接调用返回的promise对象的reject
+
+```javascript
+if (this.status === FULFILLED) {
+  try {
+    callRes = successCall(this.successValue);
+    handleResolve(callRes, resolve, reject);
+  } catch (error) {
+    reject(error)
+  }
+}
+```
+
+**再处理下异步的情况，完整代码如下**
+
+```javascript
+const PENDING = "pending";
+const FULFILLED = "fulfilled";
+const REJECTED = "rejected";
+
+class MyPromise {
+  constructor(exec) {
+    try {
+      exec(this.resolve, this.reject);
+    } catch (err) {
+      this.reject(err);
+    }
+  }
+
+  status = PENDING;
+  successCall = [];
+  errorCall = [];
+
+  resolve = (value) => {
+    if (this.status !== PENDING) return;
+    this.status = FULFILLED;
+    this.successValue = value;
+    // 需要执行数组中的所有函数
+    this.successCall.forEach((fn) => {
+      fn();
+    });
+    this.successCall = [];
+  };
+
+  reject = (value) => {
+    if (this.status !== PENDING) return;
+    this.status = REJECTED;
+    this.errorReson = value;
+    this.errorCall.forEach((fn) => {
+      fn();
+    });
+    this.errorCall = [];
+  };
+
+  then(successCall, errorCall) {
+    return new MyPromise((resolve, reject) => {
+      let callRes = undefined;
+      if (this.status === FULFILLED) {
+        try {
+          callRes = successCall(this.successValue);
+          handleResolve(callRes, resolve, reject);
+        } catch (error) {
+          reject(error);
+        }
+      } else if (this.status === REJECTED) {
+        try {
+          callRes = errorCall(this.errorReson);
+          handleResolve(callRes, resolve, reject);
+        } catch (err) {
+          reject(error);
+        }
+      } else {
+        this.successCall.push(() => {
+          try {
+            callRes = successCall(this.successValue);
+            handleResolve(callRes, resolve, reject);
+          } catch (err) {
+            reject(error);
+          }
+        });
+        this.errorCall.push(() => {
+          try {
+            callRes = errorCall(this.successValue);
+            handleResolve(callRes, resolve, reject);
+          } catch (err) {
+            reject(error);
+          }
+        });
+      }
+    });
+  }
+}
+
+function handleResolve(callRes, resolve, reject) {
+  if (callRes instanceof MyPromise) {
+    callRes.then(resolve, reject);
+  } else {
+    resolve(callRes);
+  }
+}
+```
+
+
 
