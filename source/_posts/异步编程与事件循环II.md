@@ -1,7 +1,7 @@
 ---
 title: 异步编程与事件循环II
 date: 2022-07-20 22:01:30
-updated: 2022-07-21 22:39:00
+updated: 2022-08-04 23:42:00
 tags: JavaScript
 categories: JavaScript
 keywords:
@@ -247,7 +247,7 @@ setTimeout宏任务，0s的定时器会被立即放进任务队列中等待调�
 
 
 
-大部分异步API都属于宏任务，而Promise, MutationObserver，或者NodeJs中的process.nextTick，则属于微任务。
+大部分异步API都属于宏任务，而Promise, MutationObserver，**queueMicroTask**，或者NodeJs中的process.nextTick，则属于微任务。
 
 
 
@@ -342,3 +342,4 @@ async function getData(){
 ```
 
 观察到只需稍加改造，把 `*` 替换成 `async`，把`yield`替换成`await`，即可得到效果一样的函数，还省去了难以理解的`co执行器`函数。
+
