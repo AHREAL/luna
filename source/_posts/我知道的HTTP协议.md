@@ -1,14 +1,14 @@
 ---
 title: 我知道的HTTP协议
 date: 2022-08-03 14:12:52
-updated: 2020-08-03 18:56:23
+updated: 2020-08-11 17:26:23
 tags: 基础遍历
 categories: 基础遍历
 keywords:
 description: 我知道的HTTP协议
-top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/202208031136143.png
+top_img: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/202208041805825.png
 comments:
-cover: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/202208031136143.png
+cover: https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/202208041805825.png
 toc:
 toc_number:
 toc_style_simple:
@@ -121,15 +121,125 @@ OSI更多是一个理论层面的模型，实际现实中跑的更多还是TCP/I
 
 我们都知道，访问一个服务，我们可以通过公网ip地址找到，但是ip地址是纯数字组成，难以记忆。所以就诞生了域名，域名是一串用“.”分隔的多个单词，最右边的被称为“顶级域名”，然后是“二级域名”，层级关系向左依次降低。
 
-## 解析
+## DNS解析
 
 就像 IP 地址必须转换成 MAC 地址才能访问主机一样，域名也必须要转换成 IP 地址，这个过程就是“**域名解析”**。
+
+由左到右，挨个查询。
 
 DNS 的核心系统是一个三层的树状、分布式服务，基本对应域名的结构：
 
 1. 根域名服务器（Root DNS Server）：管理顶级域名服务器，返回“com”“net”“cn”等顶级域名服务器的 IP 地址；
 2. 顶级域名服务器（Top-level DNS Server）：管理各自域名下的权威域名服务器，比如 com 顶级域名服务器可以返回 apple.com 域名服务器的 IP 地址；
-3. 权威域名服务器（Authoritative DNS Server）：管理自己域名下主机的 IP 地址，比如 apple.com 权威域名服务器可以返回 www.apple.com 的 IP 地址。
+3. 权威域名服务器（Authoritative DNS Server）：管理自己域名下主机的 IP 地址，比如 apple.com 权威域名服务器可以返回 IP 地址。
 
 ![img](https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/202208022126817.png)
 
+
+
+## DNS缓存
+
+各大运营商，或者公司内网会自己搭建DNS服务器，作为用户DNS查询的代理，代替访问DNS核心系统。
+一般来说，如果之前查询过的域名，则会缓存查询结果的IP地址，从而加快DNS解析的速度。
+
+并且操作系统也会自己记录DNS解析的记录，并写入host文件，以后再访问这个域名，就可以直接拿到本地记录的IP地址了。
+
+
+
+# 报文结构
+
+HTTP报文是一个**纯文本**协议，所有头数据都是ASCII码文本。
+
+HTTP报文分为**请求报文**和**响应报文**，首先两种报文的结构一致，只有在头上有所区别。
+
+结构：
+
+![img](https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/202208111713734.png)
+
+1. 起始行：描述请求或响应的基本信息
+2. 头字段（头部）：使用key：value描述报文
+3. 消息正文（实体）：实际传输的数据，不一定是文本，也可以是二进制数据
+
+**请求行**
+
+请求的起始行也叫请求行，由三部分构成：
+
+![img](https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/202208111641716.png)
+
+1. 请求方法：是一个动词，如 GET/POST，表示对资源的操作；
+2. 请求目标：通常是一个 URI，标记了请求方法要操作的资源；
+3. 版本号：表示报文使用的 HTTP 协议版本。
+
+**状态行**
+
+响应的起始行也叫状态行，由三部分构成：
+
+![img](https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/202208111643511.png)
+
+1. 版本号：表示报文使用的 HTTP 协议版本；
+2. 状态码：一个三位数，用代码的形式表示处理的结果，比如 200 是成功，500 是服务器错误；
+3. 原因：作为数字状态码补充，是更详细的解释文字，帮助人理解原因。
+
+**头字段**
+
+![image-20220811171117892](https://sls-cloudfunction-ap-guangzhou-code-1300044145.file.myqcloud.com/upload/202208111711933.png)
+
+头部字段是 key-value 的形式，key 和 value 之间用“:”分隔，最后用 CRLF 换行表示字段结束。
+
+HTTP 协议规定了非常多的头部字段，实现各种各样的功能，但基本上可以分为四大类：
+
+1. 通用字段：在请求头和响应头里都可以出现；
+2. 请求字段：仅能出现在请求头里，进一步说明请求信息或者额外的附加条件；
+3. 响应字段：仅能出现在响应头里，补充说明响应报文的信息；
+4. 实体字段：它实际上属于通用字段，但专门描述 body 的额外信息。
+
+
+
+# Method
+
+Method表示一次请求执行的具体动作，比如是获取，更改，还是删除等。
+
+目前 HTTP/1.1 规定了八种方法。
+
+1. GET：获取资源，可以理解为读取或者下载数据；
+2. HEAD：获取资源的元信息；
+3. POST：向资源提交数据，相当于写入或上传数据；
+4. PUT：类似 POST；
+5. DELETE：删除资源；
+6. CONNECT：建立特殊的连接隧道；
+7. OPTIONS：列出可对资源实行的方法；
+8. TRACE：追踪请求 - 响应的传输路径。
+
+
+
+**GET/HEAD**
+
+HEAD 方法与 GET 方法类似，也是请求从服务器获取资源，服务器的处理机制也是一样的，但服务器不会返回请求的实体数据，只会传回响应头，也就是资源的 **元信息**。
+
+HEAD 方法可以看做是 GET 方法的一个“简化版”或者“轻量版”。因为它的响应头与 GET 完全相同，所以可以用在很多并不真正需要资源的场合，避免传输 body 数据的浪费。
+
+**PUT/POST**
+
+PUT 的作用与 POST 类似，也可以向服务器提交数据，但与 POST 存在微妙的不同，通常 POST 表示的是**“新建”“create”**的含义，而 PUT 则是**“修改”“update”**的含义。
+
+在实际应用中，PUT 用到的比较少。而且，因为它与 POST 的语义、功能太过近似，有的服务器甚至就直接禁止使用 PUT 方法，只用 POST 方法上传数据。
+
+
+
+## 安全
+
+在 HTTP 协议里，**“安全”** 是指请求方法不会“破坏”服务器上的资源，即不会对服务器上的资源造成实质的修改。
+
+按照这个定义，只有 GET 和 HEAD 方法是“安全”的，因为它们是“只读”操作，只要服务器不故意曲解请求方法的处理方式，无论 GET 和 HEAD 操作多少次，服务器上的数据都是“安全的”。
+
+而 POST/PUT/DELETE 操作会修改服务器上的资源，增加或删除数据，所以是“不安全”的。
+
+
+
+## 幂等
+
+**“幂等”** 实际上是一个数学用语，被借用到了 HTTP 协议里，意思是多次执行相同的操作，结果也都是相同的，即多次“幂”后结果“相等”。
+
+很显然，GET 和 HEAD 既是安全的也是幂等的，DELETE 可以多次删除同一个资源，效果都是“资源不存在”，所以也是幂等的。
+
+按照 RFC 里的语义，POST 是“新增或提交数据”，多次提交数据会创建多个资源，所以不是幂等的；而 PUT 是“替换或更新数据”，多次更新一个资源，资源还是会第一次更新的状态，所以是幂等的。
