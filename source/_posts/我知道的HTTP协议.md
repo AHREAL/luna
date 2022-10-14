@@ -243,3 +243,55 @@ PUT 的作用与 POST 类似，也可以向服务器提交数据，但与 POST �
 很显然，GET 和 HEAD 既是安全的也是幂等的，DELETE 可以多次删除同一个资源，效果都是“资源不存在”，所以也是幂等的。
 
 按照 RFC 里的语义，POST 是“新增或提交数据”，多次提交数据会创建多个资源，所以不是幂等的；而 PUT 是“替换或更新数据”，多次更新一个资源，资源还是会第一次更新的状态，所以是幂等的。
+
+
+
+# MIME
+
+HTTP是一个超文本传输协议，超文本即指可传输文字、音频、视频等数据。
+
+
+
+## MIME type
+
+**MIME type**则用于描述传输的数据类型，常用的有：
+
+1. text：即文本格式的可读数据，我们最熟悉的应该就是 text/html 了，表示超文本文档，此外还有纯文本 text/plain、样式表 text/css 等。
+2. image：即图像文件，有 image/gif、image/jpeg、image/png 等。
+3. audio/video：音频和视频数据，例如 audio/mpeg、video/mp4 等。
+4. application：数据格式不固定，可能是文本也可能是二进制，必须由上层应用程序来解释。常见的有 application/json，application/javascript、application/pdf 等，另外，如果实在是不知道数据是什么类型，像刚才说的“黑盒”，就会是 application/octet-stream，即不透明的二进制数据。
+
+
+
+## Encoding type
+
+为了减少实体数据的体积，通常发送方会对数据进行压缩，还有一个 **Encoding type** 来描述使用什么编码格式进行的压缩，通常有以下几种：
+
+1. gzip：GNU zip 压缩格式，也是互联网上最流行的压缩格式；
+2. deflate：zlib（deflate）压缩格式，流行程度仅次于 gzip；
+3. br：一种专门为 HTTP 优化的新压缩算法（Brotli）。
+
+
+
+## 头字段
+
+上面介绍了几种常见的MIME类型，而HTTP中对于MIME这个类型规范的使用，主要用于**Accept 请求头字段和两个 Content 实体头字段**，用于客户端和服务器的**内容协商**，客户通在请求头中使用Accept标识自己能识别什么MIME类型，而服务端在响应头中使用Content来标识自己返回的数据MIME类型。
+
+```tex
+- 请求能接受的MIME类型
+Accept: text/html,application/xml,image/webp,image/png
+
+- 响应发送的MIME类型
+Content-Type: text/html
+
+- 请求能接受的压缩编码
+Accept-Encoding: gzip, deflate, br
+
+- 响应使用的压缩编码
+Content-Encoding: gzip
+```
+
+
+
+
+
