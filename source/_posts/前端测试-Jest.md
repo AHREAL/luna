@@ -1,7 +1,7 @@
 ---
 title: Jest自动化测试
-date: 2019-10-01 20:58:01
-updated: 2019-10-01 22:00:02
+date: 2022-10-14 14:50:50
+updated: 2022-10-14 14:50:50
 tags: 前端工程化
 categories: 前端工程化
 keywords:
