@@ -404,8 +404,8 @@ footer:
   owner:
     enable: true
     since: 2019
-  custom_text:
-  copyright: true # Copyright of theme and framework
+  custom_text: <a href="https://beian.miit.gov.cn/">闽ICP备2022010454号-1</a>
+  copyright: false # Copyright of theme and framework
 
 # Analysis
 # --------------------------------------
