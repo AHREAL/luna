@@ -1,14 +1,14 @@
-echo "\n🚚 拉取最新代码...\n"
+echo "🚚 拉取最新代码..."
 git pull
 
-echo "\n🚗 更新npm包...\n"
+echo "🚗 更新npm包..."
 npm install
 
-echo "\n📦️ 打包前端代码...\n"
+echo "📦️ 打包前端代码..."
 npm run build
 
-echo "\n🌏︎ 启动www服务...\n"
+echo "🌏︎ 启动www服务..."
 npm run stop
 npm run start
 
-echo "\n🎉🎉🎉 部署成功!!!\n"
+echo "🎉🎉🎉 部署成功!!!"
