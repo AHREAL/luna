@@ -9,32 +9,33 @@ const childrenProcess = require('child_process')
 const bodyParser = require('body-parser')
 const crypto = require('crypto');
 const express = require('express')
+const admin = require('./admin')
 
 const app = express()
-const httpApp = express()
-const httpPort = 80
+const httpPort = 3000
 const httpsPort = 443
 const HUB_SECRET = process.env.HUB_SECRET;
 const httpsOptions = {
-  key:fs.readFileSync('./cert/js-coder.cn.key'),
-  cert:fs.readFileSync('./cert/js-coder.cn.crt')
+  key: fs.readFileSync('./cert/js-coder.cn.key'),
+  cert: fs.readFileSync('./cert/js-coder.cn.crt')
 }
-const httpsServer = https.createServer(httpsOptions,app);
-const httpServer = http.createServer(httpApp);
-
+const httpsServer = https.createServer(httpsOptions, app);
+const httpServer = http.createServer(app);
 /** http重定向https */
-httpApp.all('*', function (req, res, next) {
-  if(req.protocol !== 'https') {
-    return res.redirect(301, 'https://' + req.get('host') + req.originalUrl);
-  }
-  return next();
-})
+// httpApp.all('*', function (req, res, next) {
+//   if (req.protocol !== 'https') {
+//     return res.redirect(301, 'https://' + req.get('host') + req.originalUrl);
+//   }
+//   return next();
+// })
 
 /** 解析body */
 app.use(bodyParser.json())
 
 /** 静态资源 */
 app.use(express.static('./public'))
+
+admin(app)
 
 /** 执行命令 */
 const exec = (bash) => {
@@ -81,7 +82,7 @@ app.post('/refresh', (req, res) => {
         console.log('❌ 自动刷新失败，请查看日志详情!')
       })
     res.status(200).send({
-      msg:'webhook success'
+      msg: 'webhook success'
     })
   }
   res.status(400).send({
@@ -89,10 +90,12 @@ app.post('/refresh', (req, res) => {
   });
 })
 
+
+
 httpsServer.listen(httpsPort, () => {
   console.log(`app listening on port ${httpsPort}`)
 })
 
-httpServer.listen(httpPort, ()=>{
+httpServer.listen(httpPort, () => {
   console.log(`app listening on port ${httpPort}`)
 })

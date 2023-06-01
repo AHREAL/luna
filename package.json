@@ -9,7 +9,8 @@
     "server": "hexo server",
     "logs": "pm2 logs",
     "start": "pm2 start ./www/index.js",
-    "stop": "pm2 stop all"
+    "stop": "pm2 stop all",
+    "dev": "nodemon ./www/index.js"
   },
   "hexo": {
     "version": "6.2.0"
@@ -30,6 +31,7 @@
     "hexo-server": "^3.0.0",
     "hexo-theme-butterfly": "^4.3.1",
     "hexo-theme-landscape": "^0.0.3",
+    "markdown-it": "^13.0.1",
     "pm2": "^5.2.0"
   }
 }
